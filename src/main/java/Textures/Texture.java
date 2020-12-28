@@ -31,16 +31,10 @@ import processing.core.PApplet;
  *
  */
 public abstract class Texture{
-	private float x,y;
-	/**
-	 * Used by subclasses to create a new Texture
-	 * @param x the x coordinate of the texture
-	 * @param y the y coordinate of the texture
-	 */
-	protected Texture(float x, float y) {
-		this.x=x;
-		this.y=y;
+	public static enum drawMode{
+		CENTER,CORNER;
 	}
+	public static drawMode currentMode;
 	/**
 	 * Resizes the textures image to the given width and height
 	 * @param w new width of texture
@@ -61,51 +55,12 @@ public abstract class Texture{
 	 * Draws the texture onto the given PApplet
 	 * @param p The given PApplet to be drawn to
 	 */
-	public abstract void draw(PApplet p);
+	public abstract void draw(PApplet p, float x, float y);
 	/**
 	 * Returns the current x coordinate of the texture
 	 * @return current x coordinate
 	 */
-	public float getX() {
-		return x;
-	}
-	/**
-	 * Sets the current x coordinate to the given x coordinate
-	 * @param x The new x coordinate
-	 */
-	public void setX(float x) {
-		this.x=x;
-	}
-	/**
-	 * Returns the current y coordinate of the texture
-	 * @return current y coordinate
-	 */
-	public float getY() {
-		return y;
-	}
-	/**
-	 * Sets the current y coordinate to the given y coordinate
-	 * @param y The new y coordinate
-	 */
-	public void setY(float y) {
-		this.y = y;
-	}
-	/**
-	 * Shifts the current texture a given amount. Positive values shift to the right,
-	 * negative values shift to the left 
-	 * @param shiftX the amount that the shape will be shifted in the x direction
-	 */
-	public void shiftX(float shiftX) {
-		x+=shiftX;
-	}
-	/**
-	 * Shifts the current texture a given amount. Positive values shift to the right,
-	 * negative values shift to the left 
-	 * @param shiftY the amount that the shape will be shifted in the x direction
-	 */
-	public void shiftY(float shiftY) {
-		y+=shiftY;
-	}
+	
 	/**
 	 * Fades the image until it is transparent
 	 */
@@ -133,20 +88,12 @@ public abstract class Texture{
 				return new TextureImage(pathName);
 			}
 		}
-		/**
-		 * Creates a Texture from the image at the given path name
-		 * @param pathName The path to the Image
-		 * @param x The starting x coordinate of the texture
-		 * @param y The starting y coordinate of the texture
-		 * @return A texture at x,y with the image at the pathname
-		 */
-		public static Texture getTexture(String pathName,float x, float y) {
-			
-			if(pathName.substring(pathName.length()-4, pathName.length()).equals(".gif")){
-				return new PGif(pathName,x,y);
-			}else {
-				return new TextureImage(pathName,x,y);
-			}
+	}
+	protected int getProcessingImageMode() {
+		if(currentMode==drawMode.CENTER) {
+			return PApplet.CENTER;
+		}else {
+			return PApplet.CORNER;
 		}
 	}
 	

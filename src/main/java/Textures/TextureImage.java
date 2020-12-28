@@ -32,7 +32,6 @@ class TextureImage extends Texture{
 	private PImage image;
 	private Fader fader;
 	TextureImage(String pathName) {
-		super(0, 0);
 		fader=null;
 		BufferedImage img = null;
 		try {
@@ -41,30 +40,20 @@ class TextureImage extends Texture{
 			e.printStackTrace();
 		}
 		image=new PImage(img);
-
-	}
-	TextureImage(String pathName,float x, float y) {
-		super(x, y);
-		fader=null;
-		BufferedImage img = null;
-		try {
-		    img = ImageIO.read(new File(pathName));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		image=new PImage(img);
-		
 	}
 
 	@Override
-	public void draw(PApplet p) {
+	public void draw(PApplet p, float x, float y) {
+		p.pushStyle();
+		p.imageMode(getProcessingImageMode());
 		if(fader!=null) {
 			p.pushMatrix();
 			fader.draw(p);
-			p.image(image, getX(), getY());
+			p.image(image, x, y);
 			p.popMatrix();
 		}else {
-		p.image(image, getX(), getY());
+		p.image(image, x, y);
+		p.popStyle();
 		}
 	}
 
@@ -93,5 +82,6 @@ class TextureImage extends Texture{
 		fader=new Fader(0,255,0.2f);
 		fader.start();
 	}
+	
 	
 }

@@ -36,7 +36,6 @@ class PGif extends Texture{
 	private int curFrame;
 	private long lastTime;
 	PGif(String pathname) {
-		super(0,0);
 		fader=null;
 		try {
 			frames=getFrames(pathname);
@@ -49,21 +48,6 @@ class PGif extends Texture{
 		}
 		lastTime=System.currentTimeMillis();
 		
-	}
-	PGif(String pathname, float x,float y) {
-		super(x,y);
-		fader=null;
-		
-		try {
-			frames=getFrames(pathname);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		lastTime=System.currentTimeMillis();
 	}
 	private Frame[] getFrames(String pathName) throws FileNotFoundException, IOException {
 		GifImage gif= GifDecoder.read(new FileInputStream(pathName));
@@ -73,16 +57,20 @@ class PGif extends Texture{
 		}
 		return answer;
 	}
-	public void draw(PApplet p) {
+	public void draw(PApplet p, float x, float y) {
+		p.pushStyle();
+		p.imageMode(getProcessingImageMode());
 		if(fader!=null) {
+		
 			p.pushMatrix();
 			fader.draw(p);
-			p.image(frames[curFrame].getImage(), getX(), getY());
+			p.image(frames[curFrame].getImage(),x, y);
 			p.popMatrix();
 		}else {
-		p.image(frames[curFrame].getImage(), getX(), getY());
+		p.image(frames[curFrame].getImage(), x, y);
 		}
 		advanceFrame();
+		p.popStyle();
 		
 	}
 	private void advanceFrame() {
